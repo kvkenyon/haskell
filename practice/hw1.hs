@@ -4,11 +4,12 @@
  - HW1
  -
  --}
+ --
+-- Ex. 1
 
 isEven :: Integer -> Bool
 isEven n = n `mod` 2 == 0
 
--- Compute the lenght of a list of Integers
 listLength :: [Integer] -> Integer
 listLength [] = 0
 listLength (_:xs) = 1 + listLength(xs)
@@ -19,7 +20,6 @@ lastDigit n = n `mod` 10
 allButLastDigit :: Integer -> Integer
 allButLastDigit n = n `div` 10
 
--- Ex. 1
 toDigits :: Integer -> [Integer]
 toDigits 0 = []
 toDigits n = toDigits (allButLastDigit n) ++ lastDigit n : []
@@ -50,4 +50,16 @@ sumDigits (x:xs) = sumDigits (toDigits x) + sumDigits(xs)
 
 validate :: Integer -> Bool
 validate x = sumDigits (doubleEveryOther (toDigits x)) `mod` 10 == 0
+
+--Ex. 5
+type Peg = String
+type Move = (Peg, Peg)
+hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
+hanoi 0 _ _ _ = []
+hanoi 1 src tmp dest  = (src, dest) : []
+hanoi n src tmp dest = 
+    (hanoi (n-1) src dest tmp) ++
+    ((src, dest) : []) ++
+    (hanoi (n-1) tmp src dest)
+
 
