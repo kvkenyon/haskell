@@ -54,3 +54,39 @@ parse :: String -> [LogMessage]
 parse [] = []
 parse x =  parseMessage (head (lines x)) : parse (unlines (tail (lines x)))
 
+insert :: LogMessage -> MessageTree -> MessageTree
+insert (Unknown _) tree = tree
+insert lm Leaf =  Node Leaf lm Leaf
+insert lm@(LogMessage _ t _) (Node l lm2@(LogMessage _ t' _) r) = if (t < t')
+  then Node (insert (lm) l) lm2 r
+  else Node l lm2 (insert (lm) r)
+
+build :: [LogMessage] -> MessageTree
+build [] = Leaf
+build (x:xs) = build' (x:xs) Leaf
+
+build' :: [LogMessage] -> MessageTree -> MessageTree
+build' [] tree = tree
+build' (x:xs) tree = build' (xs) (insert x tree)
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node l lm r) = if (l == Leaf)
+  then lm : inOrder r
+  else inOrder l ++ lm : []
+
+isSevere :: LogMessage -> Bool
+isSevere (LogMessage (Error v) _ _) = v >= 50
+isSevere _ = False
+
+getMessage :: LogMessage -> String
+getMessage (Unknown _) = ""
+getMessage (LogMessage _ _ m) = m
+
+messages :: [LogMessage] -> [String]
+messages [] = []
+messages (x:xs) = getMessage x : messages xs
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong x = messages $ inOrder $ build $ (filter (\a -> isSevere a) x)
+
