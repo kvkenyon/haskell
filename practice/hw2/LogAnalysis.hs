@@ -54,6 +54,10 @@ parse :: String -> [LogMessage]
 parse [] = []
 parse x =  parseMessage (head (lines x)) : parse (unlines (tail (lines x)))
 
+parse' :: String -> [LogMessage]
+parse' [] = []
+parse' x = map (\a -> parseMessage a) (lines x)
+
 insert :: LogMessage -> MessageTree -> MessageTree
 insert (Unknown _) tree = tree
 insert lm Leaf =  Node Leaf lm Leaf
