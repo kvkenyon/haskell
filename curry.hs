@@ -40,3 +40,14 @@ andy x y = if x == True then y else x
 multy :: Int -> (Int -> (Int -> Int))
 multy = \x -> (\y -> (\z -> x * y * z))
 
+double :: Num a => a -> a
+double x = x + x
+
+luhnDouble :: Int -> Int
+luhnDouble n = if n' > 9 then n' - 9 else n' 
+    where n' = double n 
+
+luhn :: Int -> Int -> Int -> Int -> Bool
+luhn a b c d = sum [(luhnDouble a), b, (luhnDouble c), d] `mod` 10 == 0 
+
+
