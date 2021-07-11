@@ -50,4 +50,55 @@ luhnDouble n = if n' > 9 then n' - 9 else n'
 luhn :: Int -> Int -> Int -> Int -> Bool
 luhn a b c d = sum [(luhnDouble a), b, (luhnDouble c), d] `mod` 10 == 0 
 
+squared_sum_100 = sum [x^2 | x <- [0..100]]
+
+grid :: Int -> Int -> [(Int, Int)]
+grid m n = [(x,y) | x <- [0..m], y <- [0..n]]
+
+square :: Int -> [(Int, Int)]
+square n = [(x,y) | (x,y) <- (grid n n), x /= y]
+
+replikate :: Int -> a -> [a]
+replikate n x = [x | _ <- [1..n]]
+
+pyths :: Int -> [(Int, Int, Int)]
+pyths n = [(x,y,z) | x <- [1..10], y <- [1..10], z <- [1..10], x^2 + y^2 == z^2]
+
+factors :: Int -> [Int]
+factors n = [x | x <- [1..n], n `mod` x == 0]
+
+perfects :: Int -> [Int]
+perfects n = [x | x <- [1..n], (sum (factors x)) - x == x]
+
+sumdown :: Int -> Int
+sumdown 0 = 0
+sumdown n = n + sumdown (n - 1)
+
+(^^^) :: Int -> Int -> Int
+(^^^) 0 _ = 0
+(^^^) _ 0 = 1
+(^^^) x y = x * (x ^^^ (y-1)) 
+
+euclid :: Int -> Int -> Int
+euclid x y | x == y = x
+           | x > y = euclid  (x - y) y
+           | otherwise = euclid (y - x) x
+
+merge :: Ord a => [a] -> [a] -> [a]
+merge x [] = x
+merge [] y = y
+merge (x:xs) (y:ys) | x <= y  = x:merge xs (y:ys)
+                    | otherwise = y:merge (x:xs) ys
+
+
+all' :: (a -> Bool) -> [a] -> Bool
+all' _ [] = True
+all' p (x:xs) | p x == False = False 
+              | otherwise    = all' p xs
+
+any' :: (a -> Bool) -> [a] -> Bool
+any' _ [] = False
+any' p (x:xs) | p x == True = True
+              | otherwise = any' p xs  
+
 
